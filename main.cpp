@@ -52,8 +52,8 @@ vector<Point> Koch(int depth, Point p1, float angle, float length){
     return points;
 }
 
-void savePoints(const vector<Point>& points, const char* filename){
-    ofstream file(filename);
+void savePoints(const vector<Point>& points){
+    ofstream file("lines.txt");
     if(!file.is_open()){
         cerr << "No se pudo abrir el archivo\n";
         return;
@@ -93,38 +93,51 @@ void Hilbert(int depht, const int& dx, const int& dy, Point& p){
 
 int main(int argc, char** argv){
 
-    int depht, dx, dy;
+    
 
-    if (argc < 4) {
-        cout << "You must pass a a float number and the digit to find" << endl;
-        cout << "Example: " << " 5 10 0" << endl;
+    if (argc != 5) {
+        cout << "You must folow one of the following formats: " << endl;
+        cout << "--Hilbert <depht> <dx> <dy> : --Hilbert 5 0 2" << endl;
+        cout << "--Hilbert <depht> <angle> <lenght> : --Hilbert 5 0 2" << endl;
         return -1;
     }
 
-    ofstream output("output.txt");
+    string option  = argv[1];
 
-    if (!output.is_open()) {
-        cerr << "No se pudo abrir el archivo\n";
-        return 1;
+    if (option == "--Hilbert") {
+            ofstream output("lines.txt");
+
+        if (!output.is_open()) {
+            cerr << "No se pudo abrir el archivo\n";
+            return 1;
+        }
+
+        streambuf* coutBuf = cout.rdbuf();
+        cout.rdbuf(output.rdbuf());
+
+        int depht = stoi(argv[2]);
+        int dx = stoi(argv[3]);
+        int dy = stoi(argv[4]);
+        Point p0 = {0,0};
+
+        Hilbert(depht, dx, dy, p0);
+
+        cout.rdbuf(coutBuf);
+        output.close();
+        cout << "--Hilbert ran succesfully, check lines.txt" << endl;
+    
+    } else if(option == "--Koch"){
+        int depht = stoi(argv[2]);
+        float angle = stoi(argv[3]);
+        float lenght = stoi(argv[4]);
+        Point p0 = {0.0, 0.0};
+        vector<Point> points = Koch(depht, p0, angle, lenght);
+        savePoints(points);
+        cout << "--Koch ran succesfully, check lines.txt" << endl;
+
+    } else {
+        cout << "Please select between <--Hilbert> or <--Koch>";
     }
-
-    streambuf* coutBuf = cout.rdbuf();
-    cout.rdbuf(output.rdbuf());
-    
-    
-    depht = stoi(argv[1]);
-    dx = stoi(argv[2]);
-    dy = stoi(argv[3]);
-    
-    Point p0 = {0,0};
-
-    Hilbert(depht, dx, dy, p0);
-
-    cout.rdbuf(coutBuf);
-    output.close();
-
-    vector<Point> points = Koch(5, p0, 0, 100);
-    savePoints(points, "koch_fractal.txt");
 
     return 0;
 }
