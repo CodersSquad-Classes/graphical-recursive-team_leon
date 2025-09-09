@@ -59,8 +59,8 @@ void savePoints(const vector<Point>& points){
         return;
     }
     for(size_t i = 0; i < points.size() - 1; i++){
-        file << "(" << (int)points[i].x << "," << (int)points[i].y << ")";
-        file << "(" << (int)points[i + 1].x << "," << (int)points[i + 1].y << ")\n";
+        file << "(" << points[i].x << "," << points[i].y << ")";
+        file << "(" << points[i + 1].x << "," << points[i + 1].y << ")\n";
     }
 
     file.close();
@@ -98,7 +98,7 @@ int main(int argc, char** argv){
     if (argc != 5) {
         cout << "You must folow one of the following formats: " << endl;
         cout << "--Hilbert <depht> <dx> <dy> : --Hilbert 5 0 2" << endl;
-        cout << "--Hilbert <depht> <angle> <lenght> : --Hilbert 5 0 2" << endl;
+        cout << "--Koch <depht> <angle> <lenght> : --Koch 2 0 10" << endl;
         return -1;
     }
 
